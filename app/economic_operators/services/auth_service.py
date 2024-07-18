@@ -17,8 +17,63 @@ from app.utils.aws4_signature import (
 
 def authenticate_request(headers, method, uri, payload):
     authorization_header = headers.get('Authorization')
-    
     print(authorization_header)
+    if not authorization_header:
+        return False
+    
+    auth_parts = authorization_header.split(',')
+    if len(auth_parts) != 3:
+        raise Exception("Invalid Authorization header format")
+
+    auth_dict = {}
+    for part in auth_parts:
+        key, value = part.split('=')
+        auth_dict[key.strip()] = value.strip()
+    
+    credential_part = auth_dict.get('AWS4-HMAC-SHA256 Credential')
+    if not credential_part:
+        return False
+    
+    api_key = credential_part.split('/')[0]
+    sent_signature = auth_dict.get('Signature')
+    
+    api_secret = get_api_secret(api_key)
+    if not api_secret:
+        return False
+    
+    request_date = headers.get('X-Amz-Date')
+    if not request_date:
+        return False
+    
+    date_stamp = request_date[:8]
+    credentials_scope = f"{date_stamp}/us-east-1/execute-api/aws4_request"
+    
+    query_string = '' 
+    payload_hash = hash_payload(payload)
+    
+    canonical_request = create_canonical_request(method, uri, query_string, headers, payload_hash)
+    
+    #print("Canonical Request:\n", canonical_request)
+    sts = create_string_to_sign(canonical_request, request_date, credentials_scope)
+    
+    #print("String to Sign:\n", sts)
+    calculated_signature = calculate_signature(api_secret, date_stamp, 'us-east-1', 'execute-api', sts)
+    
+    #print("Sent Signature:", sent_signature)
+    #print("Calculated Signature:", calculated_signature)
+    
+    if hmac.compare_digest(calculated_signature, sent_signature):
+        user_id = get_user_id_from_api_key(api_key)
+        # user_authenticate(user_id)
+        return True
+    
+    return False
+
+'''
+def authenticate_request(headers, method, uri, payload):
+    authorization_header = headers.get('Authorization')
+    
+    #print(authorization_header)
     
     if not authorization_header:
         return False
@@ -48,6 +103,9 @@ def authenticate_request(headers, method, uri, payload):
     date_stamp = request_date[:8]
     credentials_scope = f"{date_stamp}/us-east-1/execute-api/aws4_request"
     
+    print(request_date)
+    print(date_stamp)
+    
     #Creating canonical request
     query_string = ''
     payload_hash = hash_payload(payload)
@@ -55,17 +113,19 @@ def authenticate_request(headers, method, uri, payload):
     
     sts = create_string_to_sign(canonical_request, request_date, credentials_scope)
     
-    print("STS", sts)
-    
+    print("CANONICAL REQUEST",canonical_request)
+    print("STRING TO SIGN:  ", sts)
     calculated_signature = calculate_signature(api_secret, date_stamp, 'us-east-1', 'execute-api', sts)
-    #print(sent_signature)
-    #print(calculated_signature)
+    print("SENT_SIGNATURE", sent_signature)
+    print("CALCULATED_SIGNATURE  ", calculated_signature)
     if hmac.compare_digest(calculated_signature, sent_signature):
         users_id = get_user_id_from_api_key(api_key)
         user_authenticate(users_id)
         return True
     
     return False
+
+'''
 
 def process_login(data):
     login_result = login_user(data)
@@ -80,12 +140,12 @@ def process_login(data):
 
     response = {
         "response": {
-            "status": login_result.get("status"),
-            "errorCode": login_result.get("errorCode"),
-            "errorMessage": login_result.get("errorMessage"),
+            "status": login_result.get('response').get("status"),
+            "errorCode": login_result.get('response').get("errorCode"),
+            "errorMessage": login_result.get('response').get("errorMessage"),
             "api_key": api_key,
             "api_secret": api_secret,
-            "timestamp": login_result.get("timestamp")
+            "timestamp": login_result.get('response').get("timestamp")
         }
     }
 

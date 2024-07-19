@@ -1,6 +1,5 @@
 import mysql.connector
 import json
-from datetime import datetime
 from app.config import Config
 from app.common.exceptions.db_exceptions import DatabaseError
 

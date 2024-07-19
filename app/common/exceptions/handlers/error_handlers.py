@@ -17,7 +17,7 @@ def handle_invalid_authorization_header(e):
 def handle_401_error(e):
     response = {"error": ""}
     
-    if e:
+    if e is not None:
         response['error'] = e.message
     else:
         response['error'] = "Unauthorized access"
@@ -36,6 +36,5 @@ def handle_database_error(e):
 def register_error_handlers(app):
     app.register_error_handler(Exception, handle_exception)
     app.register_error_handler(InvalidAuthorizationHeader, handle_invalid_authorization_header)
-    app.register_error_handler(401, handle_401_error)
     app.register_error_handler(Unauthorized, handle_401_error)
     app.register_error_handler(DatabaseError, handle_database_error)

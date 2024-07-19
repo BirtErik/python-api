@@ -6,9 +6,11 @@ from app.economic_operators.dao.eo_dao import (
     execute_eo_query_list_procedure,
     execute_eo_register_procedure,
 )
+from app.common.auth.services.auth_service import process_login
 
-def login(data):
-    return execute_login_procedure(data)
+def user_login(headers, method, uri, payload):
+    return process_login(headers, method, uri, payload);
+
 
 def queryEoList():
     return execute_eo_query_list_procedure()

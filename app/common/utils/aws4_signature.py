@@ -4,8 +4,7 @@ import hmac
 def hash_payload(payload):
     return hashlib.sha256(payload.encode('utf-8')).hexdigest()
 
-def create_canonical_request(method, uri, query_string, headers, payload_hash):
-    signed_headers = ['content-type', 'host', 'x-amz-date']
+def create_canonical_request(method, uri, query_string, headers, payload_hash, signed_headers):
     canonical_headers = ''.join(f'{k.lower()}:{v.strip()}\n' for k, v in sorted(headers.items()) if k.lower() in signed_headers)
     signed_headers_str = ';'.join(sorted(signed_headers))
     canonical_request = f"{method}\n{uri}\n{query_string}\n{canonical_headers}\n{signed_headers_str}\n{payload_hash}"

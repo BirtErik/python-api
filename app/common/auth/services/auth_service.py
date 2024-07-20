@@ -3,7 +3,8 @@ from app.economic_operators.dao.eo_dao import (
     execute_user_get_secret, 
     execute_get_user_id_from_api_key, 
     execute_user_authenticate, 
-    execute_login_procedure as login_user
+    execute_login_procedure as user_login,
+    execute_check_user_authentication
 )#TODO: Add this to a service, don't call dao directly
 from app.common.utils.aws4_signature import (
     create_canonical_request,
@@ -14,7 +15,28 @@ from app.common.utils.aws4_signature import (
 from app.common.exceptions.exceptions import InvalidAuthorizationHeader, Unauthorized
 from app.common.utils.utils import extract_api_key, extract_api_secret, extract_auth_header
 
-def authenticate_request(headers, method, uri, payload):
+def check_authentication(api_key):
+    users_id = execute_get_user_id_from_api_key(api_key)
+    check_auth_response = execute_check_user_authentication(users_id)
+    is_authenticated = check_auth_response['response']['isAuthenticated']
+    
+    return is_authenticated
+
+def create_json_login_response(data, api_key, api_secret):
+    response = {
+        "response": {
+            "status": data['response']['status'],
+            "errorCode": data['response']['errorCode'],
+            "errorMessage": data['response']['errorMessage'],
+            "api_key": api_key,
+            "api_secret": api_secret,
+            "timestamp": data['response']['timestamp']
+        }
+    }
+
+    return response
+
+def authenticate_request(headers, method, uri, payload, is_login=False):
     api_key = extract_api_key(headers)
     api_secret = extract_api_secret(api_key)
     
@@ -52,17 +74,19 @@ def authenticate_request(headers, method, uri, payload):
     sent_signature = auth_dict['Signature']
     
     if hmac.compare_digest(calculated_signature, sent_signature):
-        return True
+        if is_login:
+            return True
+        else:
+            return check_authentication(api_key)
     
     return False
 
 def process_login(headers, method, uri, payload):
-    if not authenticate_request(headers, method, uri, payload):
+    if not authenticate_request(headers, method, uri, payload, is_login=True):
         raise Unauthorized()
     
     data = payload.get_json();
-    
-    login_result = login_user(data)
+    login_result = user_login(data['request'], 'api_log_path')
     api_key = login_result['response']['api_key']
     
     api_secret_result = execute_user_get_secret(api_key)
@@ -72,18 +96,6 @@ def process_login(headers, method, uri, payload):
         raise Exception('Api_secret not found')
 
     users_id = execute_get_user_id_from_api_key(api_key)
-    #TODO: ADD USER_AUTHENTICATE LOGIC
-    #user_authenticate(users_id)
+    execute_user_authenticate(users_id)
 
-    response = {
-        "response": {
-            "status": api_secret_result['response']['status'],
-            "errorCode": api_secret_result['response']['errorCode'],
-            "errorMessage": api_secret_result['response']['errorMessage'],
-            "api_key": api_key,
-            "api_secret": api_secret,
-            "timestamp": api_secret_result['response']['timestamp']
-        }
-    }
-
-    return response
+    return create_json_login_response(api_secret_result, api_key, api_secret)

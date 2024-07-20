@@ -1,7 +1,7 @@
 import mysql.connector
 import json
 from app.config import Config
-from app.common.exceptions.db_exceptions import DatabaseError
+from app.common.exceptions.exceptions import DatabaseError
 
 def get_db_connection():
     return mysql.connector.connect(

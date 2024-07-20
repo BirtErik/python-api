@@ -1,40 +1,24 @@
 from flask import jsonify
-from app.common.exceptions.exceptions import InvalidAuthorizationHeader, Unauthorized
-from app.common.exceptions.db_exceptions import DatabaseError
+from app.common.exceptions.exceptions import InvalidAuthorizationHeader, Unauthorized, BaseError, DatabaseError
 
-def handle_exception(e):
-    response = {
-        "error": str(e)
-    }
+def handle_base_error(e):
+    response = e.to_dict()
     return jsonify(response), 500
 
 def handle_invalid_authorization_header(e):
-    response = {
-        "error": e.message
-    }
+    response = e.to_dict()
     return jsonify(response), 400
 
-def handle_401_error(e):
-    response = {"error": ""}
-    
-    if e is not None:
-        response['error'] = e.message
-    else:
-        response['error'] = "Unauthorized access"
-    
+def handle_unauthorized(e):
+    response = e.to_dict()
     return jsonify(response), 401
 
 def handle_database_error(e):
-    response = {
-        "status": e.status,
-        "errorCode": e.error_code,
-        "errorMessage": e.error_message,
-        "timestamp": e.timestamp
-    }
+    response = e.to_dict()
     return jsonify(response), 500
 
 def register_error_handlers(app):
-    app.register_error_handler(Exception, handle_exception)
+    app.register_error_handler(BaseError, handle_base_error)
     app.register_error_handler(InvalidAuthorizationHeader, handle_invalid_authorization_header)
-    app.register_error_handler(Unauthorized, handle_401_error)
+    app.register_error_handler(Unauthorized, handle_unauthorized)
     app.register_error_handler(DatabaseError, handle_database_error)

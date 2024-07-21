@@ -1,16 +1,16 @@
 from flask import abort
 
 from app.economic_operators.dao.eo_dao import (
-    execute_get_user_id_from_api_key,
     execute_eo_update_procedure,
     execute_eo_delete_procedure,
     execute_eo_query_details_procedure,
     execute_eo_query_list_procedure,
     execute_eo_register_procedure,
 )
-from app.common.auth.services.auth_service import process_login, authenticate_request as auth_request
+from app.common.auth.services.auth_service import execute_get_user_id_from_api_key
+from app.common.auth.services.auth_service import authenticate_request as auth_request
 from app.common.exceptions.exceptions import Unauthorized, BaseError
-from app.common.utils.utils import extract_api_key, extract_auth_header
+from app.common.utils.utils import extract_api_key
 
 def get_user_id(headers):
     api_key = extract_api_key(headers)
@@ -24,9 +24,6 @@ def get_authenticated_user_id(request):
     authenticate_request(request)
     user_id = get_user_id(request.headers)
     return user_id
-
-def user_login(request):
-    return process_login(request.headers, request.method, request.path, request);
 
 def eo_register(request):
     user_id = get_authenticated_user_id(request)

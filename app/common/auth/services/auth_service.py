@@ -1,17 +1,19 @@
 import hmac
-from app.economic_operators.dao.eo_dao import (
+from app.common.auth.dao.auth_dao import (
     execute_user_get_secret, 
     execute_get_user_id_from_api_key, 
     execute_user_authenticate, 
-    execute_login_procedure as user_login,
+    execute_login_procedure,
     execute_check_user_authentication
-)#TODO: Add this to a service, don't call dao directly
+)
+
 from app.common.utils.aws4_signature import (
     create_canonical_request,
     create_string_to_sign,
     calculate_signature,
     hash_payload
 )
+
 from app.common.exceptions.exceptions import InvalidAuthorizationHeader, Unauthorized
 from app.common.utils.utils import extract_api_key, extract_api_secret, extract_auth_header
 
@@ -86,7 +88,7 @@ def process_login(headers, method, uri, payload):
         raise Unauthorized()
     
     data = payload.get_json();
-    login_result = user_login(data['request'], 'api_log_path')
+    login_result = execute_login_procedure(data['request'], 'api_log_path')
     api_key = login_result['response']['api_key']
     
     api_secret_result = execute_user_get_secret(api_key)
@@ -99,3 +101,6 @@ def process_login(headers, method, uri, payload):
     execute_user_authenticate(users_id)
 
     return create_json_login_response(api_secret_result, api_key, api_secret)
+
+def user_login(request):
+    return process_login(request.headers, request.method, request.path, request);

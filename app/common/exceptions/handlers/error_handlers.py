@@ -1,5 +1,10 @@
 from flask import jsonify
-from app.common.exceptions.exceptions import InvalidAuthorizationHeader, Unauthorized, BaseError, DatabaseError
+from app.common.exceptions.exceptions import (
+    InvalidAuthorizationHeader, 
+    Unauthorized, 
+    BaseError, 
+    DatabaseError
+)
 
 def handle_base_error(e):
     response = e.to_dict()

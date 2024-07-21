@@ -39,22 +39,6 @@ def build_eo_params(data, users_id, api_log_path, eo_id=None):
 
     return tuple(params)
 
-def execute_user_get_secret(api_key):
-    return execute_procedure('user_get_secret', (api_key,))
-
-def execute_user_authenticate(users_id):
-    execute_procedure('user_authenticate', (users_id,))
-    
-def execute_get_user_id_from_api_key(api_key):
-    result = execute_procedure('get_user_id_from_api_key', (api_key,))
-    return result['response']['usersId']
-
-def execute_check_user_authentication(users_id):
-    return execute_procedure('check_user_authentication', (users_id,))
-
-def execute_login_procedure(data, api_log_path):
-    return execute_procedure('user_login', (data['username'], data['password'], data['lang'], api_log_path, ))
-
 def execute_eo_register_procedure(data, users_id, api_log_path):
     params = build_eo_params(data, users_id, api_log_path)
     return execute_procedure('EO_register', params)

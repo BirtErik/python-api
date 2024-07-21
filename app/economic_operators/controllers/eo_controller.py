@@ -1,6 +1,5 @@
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, jsonify
 from app.economic_operators.services.eo_service import (
-    user_login,
     eo_register,
     eo_update,
     query_eo_list,
@@ -8,12 +7,6 @@ from app.economic_operators.services.eo_service import (
 )
 
 api_blueprint = Blueprint('api', __name__)
-
-# TODO: Move login to separate controller
-@api_blueprint.route('login', methods=['POST'])
-def login():
-    result = user_login(request);
-    return jsonify(result), 200
 
 @api_blueprint.route('eo', methods=['POST'])
 def create():

@@ -1,0 +1,298 @@
+{
+	"info": {
+		"_postman_id": "e782ccab-3853-456d-a1c7-bc357632aa8f",
+		"name": "Ebirt - Test API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25012536"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "accessKey",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "secretKey",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"request\": {\r\n        \"username\": \"test\",\r\n        \"password\": \"test\",\r\n        \"lang\": \"HR\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/tpd/v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"tpd",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EO_register",
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"request\": {\r\n        \"Message_Type\": \"1-2\",\r\n        \"EO_Type\": 2,\r\n        \"EO_Name1\": \"testeeet\",\r\n        \"EO_Name2\": \"test\",\r\n        \"EO_Address_Name\": \"test\",\r\n        \"EO_Address_StreetOne\": \"test\",\r\n        \"EO_Address_StreetTwo\": \"test\",\r\n        \"EO_Address_PostCode\": \"test\",\r\n        \"EO_Address_City\": \"test\",\r\n        \"EO_A_Info\": \"test\",\r\n        \"EO_CountryReg\": \"HRR\",\r\n        \"EO_Email\": \"test\",\r\n        \"EO_Phone\": \"test\",\r\n        \"VAT_R\": 1,\r\n        \"VAT_N\": \"test\",\r\n        \"TAX_N\": null,\r\n        \"EO_ExciseNumber1\": 1,\r\n        \"EO_ExciseNumber2\": \"Test\",\r\n        \"OtherEOID_R\": 0,\r\n        \"OtherEOID_N_list\": null,\r\n        \"Reg_3RD\": 1,\r\n        \"Reg_EOID\": \"test\",\r\n        \"EO_OtherID\": null,\r\n        \"Extensibility\": null\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/tpd/v1/eo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"tpd",
+						"v1",
+						"eo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EO_List",
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "accessKey",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "secretKey",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/tpd/v1/eolist",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"tpd",
+						"v1",
+						"eolist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EO_Details",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "accessKey",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "secretKey",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/tpd/v1/eolist/dfa6c245-4426-11ef-b243-0242ac110002",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"tpd",
+						"v1",
+						"eolist",
+						"dfa6c245-4426-11ef-b243-0242ac110002"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EO_Update",
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"request\": {\r\n        \"Message_Type\": \"1-2\",\r\n        \"EO_ID\": \"dfa6c245-4426-11ef-b243-0242ac110002\",\r\n        \"EO_CODE\": \"\",\r\n        \"EO_Type\": 2,\r\n        \"EO_Name1\": \"testTTTTTTTTTT\",\r\n        \"EO_Name2\": \"test\",\r\n        \"EO_Address_Name\": \"test\",\r\n        \"EO_Address_StreetOne\": \"test\",\r\n        \"EO_Address_StreetTwo\": \"test\",\r\n        \"EO_Address_PostCode\": \"test\",\r\n        \"EO_Address_City\": \"test\",\r\n        \"EO_A_Info\": \"test\",\r\n        \"EO_CountryReg\": \"HR\",\r\n        \"EO_Email\": \"test\",\r\n        \"EO_Phone\": \"test\",\r\n        \"VAT_R\": 1,\r\n        \"VAT_N\": \"test\",\r\n        \"TAX_N\": null,\r\n        \"EO_ExciseNumber1\": 1,\r\n        \"EO_ExciseNumber2\": \"Test\",\r\n        \"OtherEOID_R\": 0,\r\n        \"OtherEOID_N_list\": null,\r\n        \"Reg_3RD\": 1,\r\n        \"Reg_EOID\": \"test\",\r\n        \"EO_OtherID\": null,\r\n        \"Extensibility\": null\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/tpd/v1/eo/dfa6c245-4426-11ef-b243-0242ac110002",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"tpd",
+						"v1",
+						"eo",
+						"dfa6c245-4426-11ef-b243-0242ac110002"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EO_Delete",
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"request\": {\r\n        \"EO_ID\": \"cb08b0a0-4746-11ef-b243-0242ac110002\",\r\n        \"EO_CODE\": null,\r\n        \"Reg_3RD\": 1,\r\n        \"Reg_EOID\": \"test\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/tpd/v1/eo/c7994b15-4746-11ef-b243-0242ac110002",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"tpd",
+						"v1",
+						"eo",
+						"c7994b15-4746-11ef-b243-0242ac110002"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

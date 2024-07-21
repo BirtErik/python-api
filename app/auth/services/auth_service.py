@@ -17,7 +17,7 @@ from app.common.utils.aws4_signature import (
 from app.common.exceptions.exceptions import InvalidAuthorizationHeader, Unauthorized, NotFound
 from app.common.utils.utils import extract_api_key, extract_api_secret, extract_auth_header
 from app.common.logging.logging_config import setup_logging
-from app.common.logging.request_logging_middelware import log_user_login
+from app.common.logging.request_logging_middelware import log_user_login, log_user_authentication
 
 log_file_path = setup_logging()
 
@@ -26,7 +26,12 @@ def check_authentication(api_key):
     check_auth_response = execute_check_user_authentication(users_id)
     is_authenticated = check_auth_response['response']['isAuthenticated']
     
-    return is_authenticated
+    if is_authenticated:
+        log_user_authentication(users_id, message="Authentication successful");
+        return is_authenticated
+    else:
+        log_user_authentication(users_id, message="Authentication failed");
+        return is_authenticated
 
 def create_json_login_response(data, api_key, api_secret):
     response = {

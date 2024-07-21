@@ -14,8 +14,12 @@ from app.common.utils.aws4_signature import (
     hash_payload
 )
 
-from app.common.exceptions.exceptions import InvalidAuthorizationHeader, Unauthorized
+from app.common.exceptions.exceptions import InvalidAuthorizationHeader, Unauthorized, NotFound
 from app.common.utils.utils import extract_api_key, extract_api_secret, extract_auth_header
+from app.common.logging.logging_config import setup_logging
+from app.common.logging.request_logging_middelware import log_user_login
+
+log_file_path = setup_logging()
 
 def check_authentication(api_key):
     users_id = execute_get_user_id_from_api_key(api_key)
@@ -88,17 +92,18 @@ def process_login(headers, method, uri, payload):
         raise Unauthorized()
     
     data = payload.get_json();
-    login_result = execute_login_procedure(data['request'], 'api_log_path')
+    login_result = execute_login_procedure(data['request'], log_file_path)
     api_key = login_result['response']['api_key']
     
     api_secret_result = execute_user_get_secret(api_key)
     api_secret = api_secret_result['response']['api_secret']
         
     if not api_secret:
-        raise Exception('Api_secret not found')
+        raise NotFound('Api_secret not found')
 
     users_id = execute_get_user_id_from_api_key(api_key)
     execute_user_authenticate(users_id)
+    log_user_login(users_id)
 
     return create_json_login_response(api_secret_result, api_key, api_secret)
 

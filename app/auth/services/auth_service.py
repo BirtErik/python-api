@@ -1,5 +1,5 @@
 import hmac
-from app.common.auth.dao.auth_dao import (
+from app.auth.dao.auth_dao import (
     execute_user_get_secret, 
     execute_get_user_id_from_api_key, 
     execute_user_authenticate, 

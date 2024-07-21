@@ -1,5 +1,5 @@
 from app.common.exceptions.exceptions import InvalidAuthorizationHeader
-from app.common.auth.dao.auth_dao import execute_user_get_secret 
+from app.auth.dao.auth_dao import execute_user_get_secret 
 
 def extract_auth_header(headers):
     authorization_header = headers['Authorization']

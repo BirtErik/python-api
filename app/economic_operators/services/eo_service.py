@@ -7,8 +7,8 @@ from app.economic_operators.dao.eo_dao import (
     execute_eo_query_list_procedure,
     execute_eo_register_procedure,
 )
-from app.common.auth.services.auth_service import execute_get_user_id_from_api_key
-from app.common.auth.services.auth_service import authenticate_request as auth_request
+from app.auth.services.auth_service import execute_get_user_id_from_api_key
+from app.auth.services.auth_service import authenticate_request as auth_request
 from app.common.exceptions.exceptions import Unauthorized, BaseError
 from app.common.utils.utils import extract_api_key
 

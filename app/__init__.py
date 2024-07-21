@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from .config import Config
 from .economic_operators.controllers import eo_controller
 from app.common.exceptions.handlers.error_handlers import register_error_handlers
-from .common.auth.controllers import auth_controller
+from .auth.controllers import auth_controller
 
 def create_app():
     app = Flask(__name__)

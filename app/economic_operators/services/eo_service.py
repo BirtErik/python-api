@@ -36,7 +36,12 @@ def eo_register(request):
 def eo_update(request, eo_id):
     user_id = get_authenticated_user_id(request)
     data = request.get_json()
-    return execute_eo_update_procedure(eo_id, data['request'], user_id,log_file_path)
+    return execute_eo_update_procedure(eo_id, data['request'], user_id, log_file_path)
+
+def eo_delete(request, eo_id):
+    user_id = get_authenticated_user_id(request)
+    data = request.get_json()
+    return execute_eo_delete_procedure(eo_id, data['request'], user_id, log_file_path)
 
 def query_eo_list(request):
     user_id = get_authenticated_user_id(request)

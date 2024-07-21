@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.economic_operators.services.eo_service import (
     eo_register,
     eo_update,
+    eo_delete,
     query_eo_list,
     query_eo_list_details,
 )
@@ -18,12 +19,17 @@ def update(eo_id):
     result = eo_update(request, eo_id)
     return jsonify(result), 200
 
+@api_blueprint.route('/eo/<string:eo_id>', methods=['DELETE'])
+def delete(eo_id):
+    result = eo_delete(request, eo_id)
+    return jsonify(result), 200
+
 @api_blueprint.route('/eolist', methods=['GET'])
-def query_economic_operator_list():
+def query_list():
     result = query_eo_list(request)
     return jsonify(result), 200
 
 @api_blueprint.route('/eolist/<string:eo_id>', methods=['GET'])
-def query_economic_operator_details(eo_id):
+def query_details(eo_id):
     result = query_eo_list_details(request, eo_id)
     return jsonify(result), 200

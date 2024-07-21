@@ -47,8 +47,8 @@ def execute_eo_update_procedure(eo_id, data, users_id, api_log_path):
     params = build_eo_params(data, users_id, api_log_path, eo_id)
     return execute_procedure('EO_update', params)
 
-def execute_eo_delete_procedure(eo_id):
-    return execute_procedure('EO_delete', (eo_id,))
+def execute_eo_delete_procedure(eo_id, data, users_id, api_log_path):
+    return execute_procedure('EO_delete', (eo_id, data['EO_CODE'], data['Reg_3RD'], data['Reg_EOID'], None, users_id, api_log_path, ))
 
 def execute_eo_query_list_procedure(user_id, api_log_path):
     return execute_procedure('EO_query_list', (user_id, api_log_path))

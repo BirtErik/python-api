@@ -36,6 +36,12 @@ def execute_procedure(procedure_name, params):
         return results[0] if results else {}
     except DatabaseError as db_err:
         raise db_err
+    except mysql.connector.Error as err:
+        raise DatabaseError(
+            status='Error',
+            error_code=err.errno,
+            error_message=f'Data error: {str(err.msg)}'
+        )
     finally:
         cursor.close()
         db.close()
